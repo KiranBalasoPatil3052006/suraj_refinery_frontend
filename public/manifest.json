@@ -1,0 +1,32 @@
+{
+  "name": "Suraj Bullion Accessories",
+  "short_name": "SBA Silver",
+  "description": "Silver Sample Certificate and Assay Quality Testing System",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#eaeff1",
+  "theme_color": "#0c3b3e",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

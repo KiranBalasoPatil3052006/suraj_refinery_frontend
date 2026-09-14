@@ -1,0 +1,494 @@
+/* ==========================================================================
+   Silver Sample Certificate — Exact Reference Stylesheet
+   Ported 1:1 from certificate/certificate.css for 100% pixel fidelity
+   across UI, PDF, and Print outputs.
+   ========================================================================== */
+
+:root {
+  --sba-navy:        #0B3C55;
+  --sba-navy-deep:   #082B3D;
+  --sba-gold:        #C9A227;
+  --sba-gold-soft:   #D9BE72;
+  --sba-bg-soft:     #EEF6F9;
+  --sba-border-soft: #C7DEE7;
+  --sba-text-muted:  #4C6B7A;
+  --sba-line:        #4A87A3;
+
+  --cert-w: 1200px;
+  --cert-h: 800px;
+}
+
+/* ----------------------------------------------------------------------
+   1. Responsive viewport that scales the FIXED certificate without ever
+      distorting its aspect ratio or letting content overflow.
+   ---------------------------------------------------------------------- */
+.certificate-viewport {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 0;
+  background: transparent;
+}
+
+.certificate-scaler {
+  position: relative;
+  margin: 0 auto;
+}
+
+.certificate {
+  width: var(--cert-w);
+  height: var(--cert-h);
+  flex-shrink: 0;
+  position: relative;
+  background: #ffffff;
+  /* Tailwind preflight sets 1.5 globally. The reference certificate uses
+     the browser's normal line-height, so reset the print canvas here. */
+  line-height: normal;
+  transform-origin: top left;
+  touch-action: pan-x pan-y pinch-zoom;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.certificate *,
+.certificate *::before,
+.certificate *::after {
+  box-sizing: border-box;
+}
+
+/* ----------------------------------------------------------------------
+   2. Certificate frame / background
+   ---------------------------------------------------------------------- */
+.cert-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ----------------------------------------------------------------------
+   3. Content area
+   ---------------------------------------------------------------------- */
+.cert-content {
+  position: absolute;
+  inset: 44px 56px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+/* -- header: contact block (left) + title (center) + spacer (right) ---- */
+.cert-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cert-contact {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 86px;
+}
+
+.contact-row {
+  display: flex;
+  gap: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--sba-navy);
+}
+
+.contact-row.contact-phone {
+  align-items: center;
+}
+
+.contact-row.contact-phone svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  margin-top: 0;
+  color: var(--sba-navy);
+}
+
+.contact-row.contact-phone span {
+  line-height: 1.2;
+}
+
+.contact-row.contact-address {
+  align-items: flex-start;
+}
+
+.contact-row.contact-address svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--sba-navy);
+}
+
+.contact-row.contact-address span {
+  line-height: 1.35;
+}
+
+.cert-header-spacer {
+  width: 260px;
+  flex-shrink: 0;
+}
+
+.cert-title-block {
+  flex: 1;
+  text-align: center;
+  padding: 0 12px;
+}
+
+.cert-tamil-title {
+  font-family: 'Noto Serif Tamil', serif;
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.2;
+  color: var(--sba-navy);
+  margin: 0 0 3px;
+  white-space: nowrap;
+}
+
+.cert-english-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 0.03em;
+  color: var(--sba-navy);
+  margin: 0 0 18px;
+  white-space: nowrap;
+}
+
+.cert-subtitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.28em;
+  color: var(--sba-navy);
+  white-space: nowrap;
+  line-height: 18px;
+}
+
+.cert-subtitle .cert-subtitle-line,
+.cert-subtitle svg.rule {
+  width: 46px;
+  height: 18px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.cert-subtitle .cert-subtitle-text {
+  line-height: 18px;
+  display: inline-block;
+}
+
+.cert-subtitle .rule:not(svg) {
+  width: 46px;
+  height: 1.5px;
+  background: var(--sba-gold);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* -- centered seal -------------------------------------------------------- */
+.cert-seal-row {
+  display: flex;
+  justify-content: center;
+  margin-top: -34px;
+}
+
+.cert-seal {
+  width: 138px;
+  flex-shrink: 0;
+}
+
+.cert-seal img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* -- two-column body split by a vertical rule ----------------------------- */
+.cert-body-columns {
+  flex: 1;
+  display: flex;
+  margin-top: 10px;
+  min-height: 0;
+}
+
+.cert-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cert-col-left {
+  padding-right: 46px;
+}
+
+.cert-col-right {
+  padding-left: 46px;
+  border-left: 1.5px solid var(--sba-line);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 92px 14px 1fr;
+  /* Keep the label, colon, and entered text on one typographic baseline.
+     `start` aligns their boxes, which is visibly wrong when their fonts or
+     line-heights differ in the PDF/print renderer. */
+  align-items: baseline;
+  column-gap: 4px;
+  font-family: 'Playfair Display', serif;
+}
+
+.field-row + .field-row {
+  margin-top: 22px;
+}
+
+.field-label {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--sba-navy);
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.field-colon {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--sba-navy);
+  line-height: 1.3;
+}
+
+.field-value {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sba-navy-deep);
+  border-bottom: 1.4px solid var(--sba-line);
+  padding-bottom: 7px;
+  min-height: 27px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tabular numbers for S.No and Date */
+.num-value {
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
+  letter-spacing: 0.05em;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+}
+
+/* -- Mark block: label row + line 2 row --------------------------------- */
+.mark-block {
+  display: flex;
+  flex-direction: column;
+  margin-top: 22px;
+}
+
+.mark-line2-row {
+  display: grid;
+  grid-template-columns: 92px 14px 1fr;
+  column-gap: 4px;
+  margin-top: 14px;
+}
+
+.mark-line2-value {
+  grid-column: 3;
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--sba-navy-deep);
+  border-bottom: 1.4px solid var(--sba-line);
+  padding-bottom: 7px;
+  min-height: 27px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* -- Silver Sample image box (compact frame) ----------------------------- */
+.sample-box {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  height: 195px;
+  flex: 0 0 195px;
+  margin: 18px auto 0;
+  align-self: center;
+  background: #F4F7F8;
+  border: 1.5px solid var(--sba-border-soft);
+  border-radius: 8px;
+  overflow: hidden;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sample-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #9CB0B9;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.sample-placeholder svg {
+  width: 44px;
+  height: 44px;
+}
+
+.sample-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 6.5px;
+}
+
+/* -- right column: S.No / Date, Fineness, Proprietor --------------------- */
+.cert-spacer {
+  flex: 0;
+  height: 34px;
+}
+
+.side-label {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--sba-navy);
+  margin-bottom: 10px;
+  margin-top: 38px;
+}
+
+.fineness-box {
+  background: var(--sba-bg-soft);
+  border: 1.5px solid var(--sba-border-soft);
+  border-radius: 10px;
+  padding: 16px 10px 18px;
+  text-align: center;
+}
+
+.fineness-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  color: var(--sba-navy-deep);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+}
+
+.fineness-value > span:not(.diamond) {
+  display: block;
+  line-height: 1;
+}
+
+.fineness-value .diamond {
+  /* A geometric diamond avoids font-specific glyph baselines. Flex centers
+     this smaller icon against the 48px digit row in UI, PDF, and print. */
+  display: block;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  margin: 0 17px;
+  background: var(--sba-gold);
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  transform: rotate(45deg);
+}
+
+.fineness-words {
+  margin-top: 16px;
+  text-align: center;
+  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  word-spacing: 24px;
+  color: var(--sba-navy);
+}
+
+.proprietor-block {
+  width: 220px;
+  margin: auto 0 0 auto;
+  text-align: center;
+}
+
+.proprietor-block .signature-space {
+  height: 55px;
+}
+
+.proprietor-block .signature-line {
+  height: 0;
+  border-top: 1.4px solid var(--sba-navy);
+  margin-bottom: 8px;
+}
+
+.proprietor-block .signature-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--sba-navy);
+}
+
+/* ==========================================================================
+   Print — certificate prints horizontally on an A4 sheet,
+   sized as A5 (210mm x 148.5mm), covering exactly the top half of the sheet.
+   Exact match to the generated PDF format.
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: #ffffff !important;
+    overflow: hidden !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f2f5f6;
+    color: #0b252c;
+    overflow-x: hidden;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Luxury ornamental border styles for certificate */
+.certificate-double-border {
+  border: 3px double #0c3b3e;
+  outline: 1px solid rgba(197, 160, 89, 0.5);
+  outline-offset: -6px;
+}
+
+.certificate-inner-border {
+  border: 1px solid rgba(12, 59, 62, 0.15);
+}
+
+/* Subtle background wave at the bottom */
+.wave-bg {
+  background: radial-gradient(circle at 50% 120%, rgba(20, 114, 119, 0.08) 0%, rgba(240, 249, 250, 0) 70%);
+}
