@@ -17,7 +17,7 @@ export const RefinerySeal: React.FC<RefinerySealProps> = ({
     >
       <img
         src={sealImg}
-        alt="SURAJ BULLION ACCESSORIES Seal"
+        alt="SURAJ BULLION ASSAYERS Seal"
         className="w-full h-full object-contain"
         loading="eager"
       />

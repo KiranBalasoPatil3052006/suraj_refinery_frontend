@@ -230,26 +230,29 @@ export const CreateCertificate: React.FC<CreateCertificateProps> = ({
             onChange={setPrintType}
           />
 
-          {/* Live Certificate Preview when Complete Certificate is selected */}
-          {printType === 'complete' && (
-            <div className="pt-2 flex flex-col space-y-2">
-              <div className="flex items-center justify-between text-xs font-semibold text-[#0c3b47]">
-                <span className="flex items-center space-x-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Live Certificate Preview (Complete Design)</span>
+          {/* Live Certificate Preview for Complete or Only Values */}
+          <div className="pt-2 flex flex-col space-y-2">
+            <div className="flex items-center justify-between text-xs font-semibold text-[#0c3b47]">
+              <span className="flex items-center space-x-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <span>
+                  {printType === 'complete'
+                    ? 'Live Certificate Preview (Complete Design)'
+                    : 'Live Certificate Preview (Only Values - Pre-printed Paper)'}
                 </span>
-                <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-medium border border-emerald-200">
-                  Live Updating
-                </span>
-              </div>
-              <div className="rounded-xl overflow-hidden border border-slate-300 shadow-sm bg-white">
-                <CompleteCertificate
-                  certificate={currentCertificate}
-                  id="live-form-certificate-canvas"
-                />
-              </div>
+              </span>
+              <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-medium border border-emerald-200">
+                Live Updating
+              </span>
             </div>
-          )}
+            <div className="rounded-xl overflow-hidden border border-slate-300 shadow-sm bg-white">
+              <CompleteCertificate
+                certificate={currentCertificate}
+                id="live-form-certificate-canvas"
+                printMode={printType}
+              />
+            </div>
+          </div>
 
           {/* Brand Footer Slogan */}
           <div className="pt-2 pb-1 flex flex-col items-center justify-center select-none">

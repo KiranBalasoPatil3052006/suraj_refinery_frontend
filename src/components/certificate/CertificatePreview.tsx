@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Edit3, Download, ShieldCheck, Loader2, Printer } from 'lucide-react';
 import { Certificate } from '../../types/certificate';
 import { CompleteCertificate } from './CompleteCertificate';
-import { formatDisplayDate } from '../../utils/purity';
 import { generateCertificatePDF } from '../../utils/pdfGenerator';
 import { printCertificate } from '../../utils/printCertificate';
 
@@ -35,15 +34,12 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
     }
   }, [certificate.printType]);
 
-  const clean = (certificate.purity || '').replace(/[^\d.]/g, '');
-  const [w = '', d = ''] = clean.split('.');
-  const formattedPurity = w || d ? `${w} ◆ ${d}` : '';
-
   const handleDownloadPdf = async () => {
     setIsGeneratingPdf(true);
     try {
+      const targetCert = { ...certificate, printType: activeMode };
       if (onDownload) {
-        await onDownload(certificate);
+        await onDownload(targetCert);
       } else {
         const fileName = `Silver-Certificate-${certificate.serialNo || '0100'}.pdf`;
         await generateCertificatePDF('complete-certificate-canvas', fileName);
@@ -59,8 +55,9 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   const handlePrintClick = async () => {
     setIsPrinting(true);
     try {
+      const targetCert = { ...certificate, printType: activeMode };
       if (onPrint) {
-        await onPrint(certificate);
+        await onPrint(targetCert);
       } else {
         await printCertificate('complete-certificate-canvas');
       }
@@ -133,90 +130,25 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
               : 'Values-only format aligned for physical pre-printed stationery'}
           </span>
         </div>
-      </div>
-
-      {/* Main Preview Container */}
+      </div>      {/* Main Preview Container */}
       <div className="w-full flex flex-col items-center">
-        {activeMode === 'complete' ? (
-          <div className="w-full flex flex-col items-center shadow-elevated rounded-2xl overflow-hidden border border-slate-300/80 bg-white">
-            <CompleteCertificate
-              certificate={certificate}
-              id="complete-certificate-canvas"
-            />
-          </div>
-        ) : (
-          <>
-            {/* Background canvas for PDF/Print while in Values view */}
-            <div
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '1200px',
-                height: '800px',
-                pointerEvents: 'none',
-                zIndex: -9999,
-                opacity: 0,
-                overflow: 'hidden',
-              }}
-            >
-              <CompleteCertificate
-                certificate={certificate}
-                id="complete-certificate-canvas"
-                isPdfCapture={true}
-              />
+        <div className="w-full flex flex-col items-center shadow-elevated rounded-2xl overflow-hidden border border-slate-300/80 bg-white">
+          {activeMode === 'values' && (
+            <div className="w-full bg-amber-50/90 border-b border-amber-200/70 py-1.5 px-3 flex items-center justify-between text-[11px] text-amber-900 font-medium select-none">
+              <span className="flex items-center space-x-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                <span>Stationery Mode: Only values print at exact paper coordinates</span>
+              </span>
+              <span className="font-mono text-[10px] text-amber-700 font-semibold uppercase">Zero Shift</span>
             </div>
-
-            {/* "Only Values" view representing physical pre-printed sheet alignment */}
-            <div className="w-full max-w-[420px] bg-white rounded-2xl border border-dashed border-slate-300 p-6 min-h-[460px] shadow-sm relative text-[#0c3b3e]">
-              <div className="text-center text-[10px] font-mono text-amber-800 bg-amber-50 py-1.5 px-2 rounded-md mb-6 border border-amber-200/60">
-                [PRINT PREVIEW: Pre-printed stationery layout - only dynamic values rendered]
-              </div>
-
-            <div className="space-y-6 text-xs">
-              <div className="flex justify-between items-center font-mono">
-                <div>
-                  <span className="text-slate-400 text-[10px] block">S.No:</span>
-                  <span className="font-bold text-slate-900 text-base">
-                    {certificate.serialNo}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <span className="text-slate-400 text-[10px] block">Date:</span>
-                  <span className="font-bold text-slate-900">
-                    {formatDisplayDate(certificate.date)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <span className="text-slate-400 text-[10px] block">Customer:</span>
-                <span className="font-bold text-slate-900 text-sm font-serif">
-                  {certificate.customerName} ({certificate.namePrefix || 'Mrs.'})
-                </span>
-              </div>
-
-              <div className="pt-2">
-                <span className="text-slate-400 text-[10px] block">Mark:</span>
-                <div className="font-semibold text-slate-800 text-xs">
-                  {certificate.markLines?.filter(Boolean).join(' • ') || '—'}
-                </div>
-              </div>
-
-              <div className="pt-6 text-center">
-                <span className="text-slate-400 text-[10px] block">Fairness (Purity):</span>
-                <div className="text-2xl font-bold font-mono text-brand-900 mt-1">
-                  {formattedPurity}
-                </div>
-                <div className="text-xs uppercase font-serif tracking-wider text-slate-600 mt-1">
-                  {certificate.purityWords}
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+          )}
+          <CompleteCertificate
+            certificate={certificate}
+            id="complete-certificate-canvas"
+            printMode={activeMode}
+          />
+        </div>
+      </div>
 
       {/* Dual Action Buttons: Print Certificate & Download PDF — Sticky Bottom Bar on Mobile */}
       <div className="sticky bottom-0 z-30 w-[calc(100%+1.5rem)] -mx-3 -mb-12 sm:w-[calc(100%+2rem)] sm:-mx-4 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">

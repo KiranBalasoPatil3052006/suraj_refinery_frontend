@@ -193,6 +193,7 @@ export default function App() {
           certificate={pdfTargetCert}
           id="offscreen-certificate-canvas"
           isPdfCapture={true}
+          printMode={pdfTargetCert.printType}
         />
       </div>
 
@@ -400,3 +401,19 @@ export default function App() {
     </div>
   );
 }
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

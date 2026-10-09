@@ -471,6 +471,76 @@
 }
 
 /* ==========================================================================
+   Values-Only Print Mode (Physical Pre-Printed Stationery Mode)
+   Suppresses all static pre-printed elements while preserving 100% exact
+   layout geometry, box dimensions, grid alignments, and baselines (Zero Shift).
+   ========================================================================== */
+.certificate.print-values-only {
+  background: #ffffff !important;
+}
+
+/* 1. Hide decorative background artwork & borders */
+.certificate.print-values-only .cert-bg-img {
+  visibility: hidden !important;
+}
+
+/* 2. Hide store header (contact, titles, subtitle, rules) while keeping exact height */
+.certificate.print-values-only .cert-header {
+  visibility: hidden !important;
+}
+
+/* 3. Hide circular seal */
+.certificate.print-values-only .cert-seal-row {
+  visibility: hidden !important;
+}
+
+/* 4. Hide vertical dividing rule between columns */
+.certificate.print-values-only .cert-col-right {
+  border-left-color: transparent !important;
+}
+
+/* 5. Hide field labels and colons (preserves grid column 1 & 2 spacing: 92px / 14px) */
+.certificate.print-values-only .field-label,
+.certificate.print-values-only .field-colon {
+  visibility: hidden !important;
+}
+
+/* 6. Hide underlines under dynamic field values (already pre-printed on stationery) */
+.certificate.print-values-only .field-value,
+.certificate.print-values-only .mark-line2-value {
+  border-bottom-color: transparent !important;
+}
+
+/* 7. Hide sample box border and background; hide camera placeholder */
+.certificate.print-values-only .sample-box {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.certificate.print-values-only .sample-placeholder {
+  visibility: hidden !important;
+}
+
+/* 8. Hide fineness label, container border & background, and diamond separator */
+.certificate.print-values-only .side-label {
+  visibility: hidden !important;
+}
+
+.certificate.print-values-only .fineness-box {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.certificate.print-values-only .diamond {
+  visibility: hidden !important;
+}
+
+/* 9. Hide signature line and PROPRIETOR text */
+.certificate.print-values-only .proprietor-block {
+  visibility: hidden !important;
+}
+
+/* ==========================================================================
    Print — certificate prints horizontally on an A4 sheet,
    sized as A5 (210mm x 148.5mm), covering exactly the top half of the sheet.
    Exact match to the generated PDF format.

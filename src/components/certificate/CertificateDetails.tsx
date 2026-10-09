@@ -44,8 +44,27 @@ export const CertificateDetails: React.FC<CertificateDetailsProps> = ({
         </div>
       </div>
 
-      {/* When printType is complete, show the complete certificate */}
-      {certificate.printType === 'complete' && (
+      {/* Certificate Visual Preview based on printType */}
+      {certificate.printType === 'values' ? (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs font-semibold text-amber-900 px-1">
+            <span className="flex items-center space-x-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>Stationery Print Preview (Only Values)</span>
+            </span>
+            <span className="text-[10px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full font-medium border border-amber-200">
+              Pre-printed Paper Alignment
+            </span>
+          </div>
+          <div className="rounded-2xl overflow-hidden border border-slate-300/80 shadow-elevated bg-white">
+            <CompleteCertificate
+              certificate={certificate}
+              id="details-complete-certificate-canvas"
+              printMode="values"
+            />
+          </div>
+        </div>
+      ) : (
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs font-semibold text-brand-900 px-1">
             <span className="flex items-center space-x-1.5">
@@ -60,6 +79,7 @@ export const CertificateDetails: React.FC<CertificateDetailsProps> = ({
             <CompleteCertificate
               certificate={certificate}
               id="details-complete-certificate-canvas"
+              printMode="complete"
             />
           </div>
         </div>

@@ -9,6 +9,7 @@ interface CompleteCertificateProps {
   id?: string;
   className?: string;
   isPdfCapture?: boolean;
+  printMode?: 'complete' | 'values';
 }
 
 const DIGIT_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
@@ -29,7 +30,7 @@ function finenessToDigitWords(value: string | undefined): string {
 }
 
 /**
- * CompleteCertificate — React port of certificate/certificate.html
+ * CompleteCertificate ? React port of certificate/certificate.html
  *
  * This component produces EXACTLY the same DOM structure and CSS class names
  * as the reference certificate module. The HTML, CSS, and rendering pipeline
@@ -43,8 +44,10 @@ export const CompleteCertificate: React.FC<CompleteCertificateProps> = ({
   id = 'complete-certificate-canvas',
   className = '',
   isPdfCapture = false,
+  printMode,
 }) => {
   const { settings } = useStoreSettings();
+  const isValuesOnly = (printMode || certificate.printType) === 'values';
   const viewportRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLSpanElement>(null);
   const [scale, setScale] = useState<number>(1);
@@ -128,7 +131,7 @@ export const CompleteCertificate: React.FC<CompleteCertificateProps> = ({
       >
         <div
           id={id}
-          className="certificate"
+          className={`certificate ${isValuesOnly ? 'print-values-only' : ''}`}
           style={{
             transform: isPdfCapture ? 'none' : `scale(${scale})`,
             transformOrigin: 'top left',
@@ -194,7 +197,7 @@ export const CompleteCertificate: React.FC<CompleteCertificateProps> = ({
               <div className="cert-seal">
                 <img
                   src="/assets/sba-seal.png"
-                  alt="SBA Seal"
+                  alt="Suraj Bullion Assayers Seal"
                   crossOrigin="anonymous"
                 />
               </div>
