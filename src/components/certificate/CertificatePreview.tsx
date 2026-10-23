@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Edit3, Download, ShieldCheck, Loader2, Printer } from 'lucide-react';
 import { Certificate } from '../../types/certificate';
 import { CompleteCertificate } from './CompleteCertificate';
-import { generateCertificatePDF } from '../../utils/pdfGenerator';
+import { generateCertificatePDF, PdfOrientation } from '../../utils/pdfGenerator';
 import { printCertificate } from '../../utils/printCertificate';
+import { DownloadPdfModal } from '../common/DownloadPdfModal';
 
 interface CertificatePreviewProps {
   certificate: Certificate;
@@ -27,6 +28,7 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   );
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (certificate.printType) {
@@ -34,21 +36,26 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
     }
   }, [certificate.printType]);
 
-  const handleDownloadPdf = async () => {
+  const handleDownloadPdf = () => {
+    const targetCert = { ...certificate, printType: activeMode };
+    if (onDownload) {
+      onDownload(targetCert);
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleModalDownload = async (orientation: PdfOrientation) => {
     setIsGeneratingPdf(true);
     try {
-      const targetCert = { ...certificate, printType: activeMode };
-      if (onDownload) {
-        await onDownload(targetCert);
-      } else {
-        const fileName = `Silver-Certificate-${certificate.serialNo || '0100'}.pdf`;
-        await generateCertificatePDF('complete-certificate-canvas', fileName);
-      }
+      const fileName = `Silver-Certificate-${certificate.serialNo || '0100'}.pdf`;
+      await generateCertificatePDF('complete-certificate-canvas', fileName, orientation);
       if (onPdfGenerated) onPdfGenerated();
     } catch (err) {
       console.error('PDF generation failed:', err);
     } finally {
       setIsGeneratingPdf(false);
+      setIsModalOpen(false);
     }
   };
 
@@ -192,6 +199,15 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Standalone A5 PDF Download Modal */}
+      <DownloadPdfModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onDownload={handleModalDownload}
+        title={`Download Certificate #${certificate.serialNo || ''}`}
+        isGenerating={isGeneratingPdf}
+      />
     </div>
   );
 };

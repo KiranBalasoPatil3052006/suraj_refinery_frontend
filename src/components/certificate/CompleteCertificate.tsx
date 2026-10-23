@@ -221,13 +221,15 @@ export const CompleteCertificate: React.FC<CompleteCertificateProps> = ({
 
           {/* Sample photo evidence (when attached) */}
           {!isTemplate && certificate.samplePhotoUrl && (
-            <div className="sample-box">
-              <img
-                src={certificate.samplePhotoUrl}
-                alt="Silver sample"
-                className="sample-image"
-                crossOrigin="anonymous"
-              />
+            <div className="sample-box sample-rectangle-box">
+              <div className="sample-image-frame">
+                <img
+                  src={certificate.samplePhotoUrl}
+                  alt="Silver sample"
+                  className={`sample-image sample-vertical-image ${certificate.photoFit === 'contain' ? 'is-contain' : 'is-cover'}`}
+                  crossOrigin="anonymous"
+                />
+              </div>
             </div>
           )}
 

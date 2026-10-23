@@ -149,9 +149,8 @@ export async function renderCertificateCanvas(certEl: HTMLElement): Promise<stri
   const mirror = await createExportMirror(certEl);
 
   try {
-    let canvas: HTMLCanvasElement;
     try {
-      canvas = await html2canvas(mirror, {
+      const canvas = await html2canvas(mirror, {
         scale: CERTIFICATE_RENDER_SCALE,
         useCORS: true,
         allowTaint: true,
@@ -165,8 +164,9 @@ export async function renderCertificateCanvas(certEl: HTMLElement): Promise<stri
         scrollX: 0,
         scrollY: 0,
       });
+      return canvas.toDataURL('image/jpeg', 0.98);
     } catch {
-      canvas = await html2canvas(mirror, {
+      const canvas = await html2canvas(mirror, {
         scale: CERTIFICATE_RENDER_SCALE,
         useCORS: true,
         allowTaint: true,
@@ -180,9 +180,8 @@ export async function renderCertificateCanvas(certEl: HTMLElement): Promise<stri
         scrollX: 0,
         scrollY: 0,
       });
+      return canvas.toDataURL('image/jpeg', 0.98);
     }
-
-    return canvas.toDataURL('image/jpeg', 0.98);
   } finally {
     mirror.remove();
   }

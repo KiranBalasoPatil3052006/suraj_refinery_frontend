@@ -1,4 +1,5 @@
 export type PrintType = 'complete' | 'values';
+export type PhotoFit = 'cover' | 'contain';
 
 export interface Certificate {
   id: string;
@@ -11,6 +12,7 @@ export interface Certificate {
   purity: string; // e.g. "89.24"
   purityWords: string; // e.g. "Eight Nine Two Four"
   samplePhotoUrl?: string;
+  photoFit?: PhotoFit;
   printType: PrintType;
   createdAt: string;
 }

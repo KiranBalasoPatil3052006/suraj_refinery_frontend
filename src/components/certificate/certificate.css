@@ -252,31 +252,48 @@
   width: 100%;
 }
 
-/* Sample Photo Box — positioned under Mark lines on left */
-.sample-box {
+/* Sample Photo Box — positioned under Mark lines on left in dedicated rectangle box */
+.sample-box,
+.sample-rectangle-box {
   position: absolute;
-  top: 430px;
+  top: 432px;
   left: 58px;
   width: 424px;
   height: 168px;
   border: 1.5px solid var(--certificate-ink);
-  border-radius: 6px;
-  overflow: hidden;
+  border-radius: 8px;
   background: #ffffff;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
+  box-sizing: border-box;
 }
 
-.sample-image {
+.sample-image-frame {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.sample-image,
+.sample-vertical-image {
+  width: 100%;
+  height: 100%;
   max-width: 100%;
   max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   display: block;
+}
+
+.sample-image.is-contain,
+.sample-vertical-image.is-contain {
+  object-fit: contain;
 }
 
 /* S.No. Row — Precisely positioned at x = 698px */
@@ -434,8 +451,11 @@
 
 .certificate.print-values-only .field-value,
 .certificate.print-values-only .fineness-box,
-.certificate.print-values-only .sample-box {
+.certificate.print-values-only .sample-box,
+.certificate.print-values-only .sample-rectangle-box,
+.certificate.print-values-only .sample-image-frame {
   border-color: transparent !important;
+  background: transparent !important;
 }
 
 /* ---------- Print Media Sheet ---------- */

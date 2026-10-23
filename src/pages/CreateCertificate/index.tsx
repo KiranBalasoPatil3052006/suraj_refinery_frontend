@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Certificate, PrintType } from '../../types/certificate';
+import { Certificate, PrintType, PhotoFit } from '../../types/certificate';
 import { AppHeader } from '../../components/common/AppHeader';
 import { TitleBanner } from '../../components/common/TitleBanner';
 import { SerialNoField, CustomerNameField, DateField } from '../../components/forms/FormFields';
@@ -50,6 +50,9 @@ export const CreateCertificate: React.FC<CreateCertificateProps> = ({
   const [samplePhotoUrl, setSamplePhotoUrl] = useState<string | undefined>(
     initialData?.samplePhotoUrl
   );
+  const [photoFit, setPhotoFit] = useState<PhotoFit>(
+    initialData?.photoFit || 'cover'
+  );
   const [printType, setPrintType] = useState<PrintType>(
     initialData?.printType || 'complete'
   );
@@ -71,6 +74,7 @@ export const CreateCertificate: React.FC<CreateCertificateProps> = ({
       purity: purity || '',
       purityWords,
       samplePhotoUrl,
+      photoFit,
       printType,
       createdAt: new Date().toISOString(),
     };
@@ -121,21 +125,22 @@ export const CreateCertificate: React.FC<CreateCertificateProps> = ({
         printType,
       });
 
+      // Guarantee samplePhotoUrl is always set on newCert for preview, PDF export & print
+      if (samplePhotoUrl) {
+        newCert.samplePhotoUrl = samplePhotoUrl;
+        newCert.photoFit = photoFit;
+      }
+
       // Image upload (if photo was selected, upload it after certificate creation)
       if (samplePhotoUrl && samplePhotoUrl.startsWith('data:')) {
         try {
-          // Convert data URL to File for upload
           const response = await fetch(samplePhotoUrl);
           const blob = await response.blob();
           const file = new File([blob], 'sample.jpg', { type: blob.type || 'image/jpeg' });
           await certificateApi.uploadCertificateImage(newCert.id, file);
-          newCert.samplePhotoUrl = samplePhotoUrl; // Keep local preview URL
         } catch (imgErr) {
           console.warn('Image upload failed, certificate was still created:', imgErr);
         }
-      } else if (samplePhotoUrl) {
-        // External URL (e.g. from editing) — keep as is
-        newCert.samplePhotoUrl = samplePhotoUrl;
       }
 
       setShowSuccessToast(true);
@@ -220,6 +225,8 @@ export const CreateCertificate: React.FC<CreateCertificateProps> = ({
           <PhotoUpload
             value={samplePhotoUrl}
             onChange={setSamplePhotoUrl}
+            photoFit={photoFit}
+            onPhotoFitChange={setPhotoFit}
           />
 
           <div className="h-[1px] bg-slate-100" />

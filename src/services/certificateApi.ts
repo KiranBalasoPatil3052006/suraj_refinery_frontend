@@ -87,7 +87,8 @@ function transformCertificate(backend: BackendCertificate): Certificate {
     purity: backend.fineness,
     purityWords: backend.finenessWords,
     printType: backend.printType,
-    samplePhotoUrl: undefined, // Will be resolved via presigned URL
+    samplePhotoUrl: (backend as any).samplePhotoUrl || undefined,
+    photoFit: (backend as any).photoFit || 'cover',
     createdAt: backend.createdAt,
   };
 }

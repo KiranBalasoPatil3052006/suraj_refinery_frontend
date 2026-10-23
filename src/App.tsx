@@ -11,12 +11,13 @@ import { ViewCertificate } from './pages/ViewCertificate';
 import { PreviewCertificate } from './pages/PreviewCertificate';
 import { TemplateCertificate } from './pages/TemplateCertificate';
 import { CompleteCertificate } from './components/certificate/CompleteCertificate';
-import { generateCertificatePDF } from './utils/pdfGenerator';
+import { generateCertificatePDF, PdfOrientation } from './utils/pdfGenerator';
 import { printCertificate } from './utils/printCertificate';
 import { usePwaInstall } from './hooks/usePwaInstall';
 import { Smartphone, Monitor, CheckCircle, Info, Loader2, LogOut, Download, Sliders, Printer } from 'lucide-react';
 import { StoreSettingsModal } from './components/common/StoreSettingsModal';
 import { SidebarBottomSheet } from './components/common/SidebarBottomSheet';
+import { DownloadPdfModal } from './components/common/DownloadPdfModal';
 
 export default function App() {
   const { isInstallable, installApp } = usePwaInstall();
@@ -32,6 +33,7 @@ export default function App() {
   // Target certificate for PDF export
   const [pdfTargetCert, setPdfTargetCert] = useState<Certificate>(MOCK_CERTIFICATES[0]);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [downloadTargetCert, setDownloadTargetCert] = useState<Certificate | null>(null);
 
   // Desktop viewport preview toggle
   const [viewMode, setViewMode] = useState<'mobile-frame' | 'responsive'>('mobile-frame');
@@ -99,18 +101,24 @@ export default function App() {
     return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
-  // Robust universal PDF generation
-  const handleDownloadPDF = async (cert: Certificate) => {
+  // Opens universal A5 orientation selection modal (horizontal or vertical)
+  const handleDownloadPDF = (cert: Certificate) => {
+    setDownloadTargetCert(cert);
+  };
+
+  // Robust universal PDF generation with user-selected A5 orientation
+  const executeDownloadPDF = async (cert: Certificate, orientation: PdfOrientation) => {
     // The export always uses the unscaled canonical canvas. Capturing the
     // visible preview leaves html2canvas in a phone-sized layout context.
     flushSync(() => setPdfTargetCert(cert));
     setIsGeneratingPdf(true);
-    showToast('Generating PDF', `Rendering certificate #${cert.serialNo || '0100'}...`, 'info');
+    showToast('Generating PDF', `Rendering certificate #${cert.serialNo || '0100'} (${orientation})...`, 'info');
 
     try {
       await generateCertificatePDF(
         'offscreen-certificate-canvas',
-        `SBA-Certificate-${cert.serialNo || '0100'}.pdf`
+        `SBA-Certificate-${cert.serialNo || '0100'}.pdf`,
+        orientation
       );
       showToast('Download Ready', `Certificate #${cert.serialNo} downloaded successfully!`, 'success');
     } catch (err) {
@@ -118,6 +126,7 @@ export default function App() {
       showToast('PDF Error', 'Failed to generate PDF. Please try again.', 'info');
     } finally {
       setIsGeneratingPdf(false);
+      setDownloadTargetCert(null);
     }
   };
 
@@ -404,6 +413,19 @@ export default function App() {
         isOpen={isStoreSettingsOpen}
         onClose={() => setIsStoreSettingsOpen(false)}
         onSaved={() => showToast('Settings Updated', 'Certificate static content & store details updated successfully!', 'success')}
+      />
+
+      {/* Universal A5 PDF Download Modal (Horizontal & Vertical options) */}
+      <DownloadPdfModal
+        isOpen={downloadTargetCert !== null}
+        onClose={() => setDownloadTargetCert(null)}
+        onDownload={(orientation) => {
+          if (downloadTargetCert) {
+            return executeDownloadPDF(downloadTargetCert, orientation);
+          }
+        }}
+        title={`Download Certificate #${downloadTargetCert?.serialNo || ''}`}
+        isGenerating={isGeneratingPdf}
       />
 
       {/* Global Interactive Toast Notification */}

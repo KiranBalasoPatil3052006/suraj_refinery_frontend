@@ -12,57 +12,47 @@ import {
 interface PhotoUploadProps {
   value?: string;
   onChange: (url?: string) => void;
+  photoFit?: 'cover' | 'contain';
+  onPhotoFitChange?: (fit: 'cover' | 'contain') => void;
 }
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const LANDSCAPE_WIDTH = 1280;
-const LANDSCAPE_HEIGHT = 720;
-
-function renderLandscapeFrame(
+function renderPhotoFrame(
   source: CanvasImageSource,
   sourceWidth: number,
   sourceHeight: number
 ): HTMLCanvasElement {
   const canvas = document.createElement('canvas');
-  canvas.width = LANDSCAPE_WIDTH;
-  canvas.height = LANDSCAPE_HEIGHT;
-
-  const targetRatio = LANDSCAPE_WIDTH / LANDSCAPE_HEIGHT;
-  const sourceRatio = sourceWidth / sourceHeight;
-  let sourceX = 0;
-  let sourceY = 0;
-  let cropWidth = sourceWidth;
-  let cropHeight = sourceHeight;
-
-  if (sourceRatio > targetRatio) {
-    cropWidth = sourceHeight * targetRatio;
-    sourceX = (sourceWidth - cropWidth) / 2;
-  } else {
-    cropHeight = sourceWidth / targetRatio;
-    sourceY = (sourceHeight - cropHeight) / 2;
+  const maxDim = 1600;
+  let w = sourceWidth;
+  let h = sourceHeight;
+  if (w > maxDim || h > maxDim) {
+    if (w > h) {
+      h = Math.round((h * maxDim) / w);
+      w = maxDim;
+    } else {
+      w = Math.round((w * maxDim) / h);
+      h = maxDim;
+    }
   }
-
-  canvas.getContext('2d')?.drawImage(
-    source,
-    sourceX,
-    sourceY,
-    cropWidth,
-    cropHeight,
-    0,
-    0,
-    LANDSCAPE_WIDTH,
-    LANDSCAPE_HEIGHT
-  );
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(source, 0, 0, w, h);
+  }
   return canvas;
 }
 
-function readAsLandscapeDataUrl(file: File): Promise<string> {
+function readAsPhotoDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const objectUrl = URL.createObjectURL(file);
     const image = new Image();
     image.onload = () => {
       try {
-        const canvas = renderLandscapeFrame(image, image.naturalWidth, image.naturalHeight);
+        const canvas = renderPhotoFrame(image, image.naturalWidth, image.naturalHeight);
         resolve(canvas.toDataURL('image/jpeg', 0.92));
       } catch (error) {
         reject(error);
@@ -85,7 +75,12 @@ function readAsLandscapeDataUrl(file: File): Promise<string> {
  *   input with capture="environment" is only a browser hint and does not
  *   reliably open a camera, especially on desktop browsers.
  */
-export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => {
+export const PhotoUpload: React.FC<PhotoUploadProps> = ({
+  value,
+  onChange,
+  photoFit = 'cover',
+  onPhotoFitChange,
+}) => {
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -202,7 +197,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => 
     }
 
     try {
-      onChange(await readAsLandscapeDataUrl(file));
+      onChange(await readAsPhotoDataUrl(file));
     } catch {
       setUploadError('The photo could not be read. Please try again.');
     }
@@ -246,7 +241,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => 
       return;
     }
 
-    const canvas = renderLandscapeFrame(video, video.videoWidth, video.videoHeight);
+    const canvas = renderPhotoFrame(video, video.videoWidth, video.videoHeight);
     onChange(canvas.toDataURL('image/jpeg', 0.92));
     closeCamera();
   };
@@ -422,8 +417,8 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => 
             </div>
           ) : (
             <div className="relative flex w-full items-center space-x-3 rounded-xl border border-slate-200 bg-white p-2.5 shadow-xs">
-              <div className="relative h-16 w-28 flex-shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
-                <img src={value} alt="Sample item preview" className="h-full w-full object-cover" />
+              <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center p-1">
+                <img src={value} alt="Sample item preview" className="max-h-full max-w-full object-contain rounded" />
               </div>
 
               <div className="min-w-0 flex-1">
@@ -431,16 +426,53 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => 
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   <span>Photo Attached</span>
                 </div>
-                <p className="mt-0.5 truncate text-[11px] text-slate-500">Ready for certificate preview</p>
-                <div className="mt-2 flex items-center">
-                  <button
-                    type="button"
-                    onClick={() => onChange(undefined)}
-                    className="flex items-center space-x-1 text-[11px] font-semibold text-red-600 hover:text-red-700 hover:underline transition-colors cursor-pointer"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                    <span>Remove</span>
-                  </button>
+                <p className="mt-0.5 truncate text-[11px] text-slate-500">Placed in certificate rectangle box</p>
+                <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center space-x-3">
+                    <button
+                      type="button"
+                      onClick={openCamera}
+                      className="flex items-center space-x-1 text-[11px] font-semibold text-brand-700 hover:text-brand-900 hover:underline transition-colors cursor-pointer"
+                    >
+                      <Camera className="h-3.5 w-3.5" />
+                      <span>Retake</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onChange(undefined)}
+                      className="flex items-center space-x-1 text-[11px] font-semibold text-red-600 hover:text-red-700 hover:underline transition-colors cursor-pointer"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span>Remove</span>
+                    </button>
+                  </div>
+
+                  {onPhotoFitChange && (
+                    <div className="flex items-center space-x-1 bg-slate-100 p-0.5 rounded-lg text-[10px] font-medium border border-slate-200">
+                      <button
+                        type="button"
+                        onClick={() => onPhotoFitChange('cover')}
+                        className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer ${
+                          photoFit !== 'contain'
+                            ? 'bg-brand-900 text-white font-semibold shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Fill Box
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onPhotoFitChange('contain')}
+                        className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer ${
+                          photoFit === 'contain'
+                            ? 'bg-brand-900 text-white font-semibold shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                      >
+                        Fit Inside
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
