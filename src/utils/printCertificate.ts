@@ -4,12 +4,13 @@ import { renderCertificateCanvas } from './certificateCanvas';
  * Print utility — optimized for both Desktop and Mobile Chrome/Safari
  *
  * Uses the same renderCertificateCanvas approach as PDF generation,
- * formatting the certificate for A4 sheet with A5 top-half alignment.
+ * formatting the certificate on a true A5 landscape sheet.
  */
 
 function findCertificateElement(elementId: string): HTMLElement | null {
   return (
     document.getElementById(elementId) ||
+    document.getElementById('template-certificate-canvas') ||
     document.getElementById('complete-certificate-canvas') ||
     document.getElementById('details-complete-certificate-canvas') ||
     document.getElementById('offscreen-certificate-canvas') ||
@@ -37,7 +38,7 @@ function generatePrintHtml(imgData: string): string {
 <title>SBA Silver Certificate</title>
 <style>
 @page {
-  size: A4 portrait;
+  size: 210mm 148mm;
   margin: 0;
 }
 *, *::before, *::after {
@@ -46,40 +47,42 @@ function generatePrintHtml(imgData: string): string {
   padding: 0;
 }
 html, body {
+  width: 210mm !important;
+  height: 148mm !important;
   margin: 0 !important;
   padding: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
   background: #ffffff !important;
   overflow: hidden !important;
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
-.a4-sheet {
-  width: 100% !important;
-  max-width: 100% !important;
-  height: 100% !important;
-  position: relative !important;
+.a5-sheet {
+  width: 210mm !important;
+  height: 148mm !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 7.76mm 3mm !important;
   background: #ffffff !important;
   margin: 0 !important;
-  padding: 0 !important;
   overflow: hidden !important;
 }
 .cert-print-img {
-  width: 100% !important;
-  min-width: 100% !important;
-  max-width: 100% !important;
-  height: 148.5mm !important;
+  width: 204mm !important;
+  height: 132.48mm !important;
+  max-width: 204mm !important;
+  max-height: 132.48mm !important;
   display: block !important;
-  margin: 0 !important;
+  margin: auto !important;
   padding: 0 !important;
   border: none !important;
-  object-fit: fill !important;
+  object-fit: contain !important;
 }
 </style>
 </head>
 <body>
-<div class="a4-sheet">
+<div class="a5-sheet">
   <img id="certPrintImg" class="cert-print-img" src="${imgData}" alt="Certificate">
 </div>
 </body>

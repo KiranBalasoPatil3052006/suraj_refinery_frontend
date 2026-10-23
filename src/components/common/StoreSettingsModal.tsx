@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, RotateCcw, Building2, Phone, MapPin, Tag, Sparkles, Type, ZoomIn } from 'lucide-react';
+import { X, Save, RotateCcw, Building2, Phone, MapPin, Tag, Sparkles, Type, ZoomIn, FileText } from 'lucide-react';
 import { useStoreSettings, StoreSettings } from '../../context/StoreSettingsContext';
 
 interface StoreSettingsModalProps {
@@ -142,7 +142,7 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
                   type="text"
                   value={formData.tamilTitle}
                   onChange={(e) => handleChange('tamilTitle', e.target.value)}
-                  placeholder="சூராஜ் புல்லியன் அசெசரீஸ்"
+                  placeholder="சூரஜ் புல்லியன் அசையேர்ஸ்"
                   className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
@@ -155,7 +155,7 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
                   type="text"
                   value={formData.englishTitle}
                   onChange={(e) => handleChange('englishTitle', e.target.value)}
-                  placeholder="SURAJ BULLION ACCESSORIES"
+                  placeholder="SURAJ BULLION ASSAYERS"
                   className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
@@ -190,6 +190,20 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
 
           {activeTab === 'contact' && (
             <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-1.5 flex items-center space-x-2">
+                  <FileText className="w-4 h-4 text-brand-700" />
+                  <span>Registration Number (Regd.No.)</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.regdNo || ''}
+                  onChange={(e) => handleChange('regdNo', e.target.value)}
+                  placeholder="235/2003/490"
+                  className="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-1.5 flex items-center space-x-2">
                   <Phone className="w-4 h-4 text-brand-700" />
@@ -417,8 +431,8 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
                       <input
                         type="number"
                         min="18"
-                        max="38"
-                        value={formData.englishTitleFontSize || 26}
+                        max="44"
+                        value={formData.englishTitleFontSize || 32}
                         onChange={(e) => handleNumberChange('englishTitleFontSize', parseInt(e.target.value, 10))}
                         className="w-full px-3 py-1.5 text-sm rounded-lg border border-slate-300 font-mono"
                       />
@@ -426,10 +440,10 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Contact & Address Font Size */}
+                  {/* Phone Font Size */}
                   <div className="bg-white p-3.5 rounded-xl border border-slate-200">
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Contact & Address (px)
+                      Phone Number (px)
                     </label>
                     <div className="flex items-center space-x-2">
                       <input
@@ -444,6 +458,24 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
                     </div>
                   </div>
 
+                  {/* Address Font Size */}
+                  <div className="bg-white p-3.5 rounded-xl border border-slate-200">
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      Address (px)
+                    </label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="number"
+                        min="14"
+                        max="26"
+                        value={formData.addressFontSize || 19}
+                        onChange={(e) => handleNumberChange('addressFontSize', parseInt(e.target.value, 10))}
+                        className="w-full px-3 py-1.5 text-sm rounded-lg border border-slate-300 font-mono"
+                      />
+                      <span className="text-xs text-slate-400">px</span>
+                    </div>
+                  </div>
+
                   {/* Field Values Font Size */}
                   <div className="bg-white p-3.5 rounded-xl border border-slate-200">
                     <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -452,9 +484,9 @@ export const StoreSettingsModal: React.FC<StoreSettingsModalProps> = ({
                     <div className="flex items-center space-x-2">
                       <input
                         type="number"
-                        min="14"
-                        max="26"
-                        value={formData.fieldValuesFontSize || 18}
+                        min="18"
+                        max="34"
+                        value={formData.fieldValuesFontSize || 29}
                         onChange={(e) => handleNumberChange('fieldValuesFontSize', parseInt(e.target.value, 10))}
                         className="w-full px-3 py-1.5 text-sm rounded-lg border border-slate-300 font-mono"
                       />

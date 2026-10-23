@@ -9,11 +9,12 @@ import { CreateCertificate } from './pages/CreateCertificate';
 import { PreviousCertificates } from './pages/PreviousCertificates';
 import { ViewCertificate } from './pages/ViewCertificate';
 import { PreviewCertificate } from './pages/PreviewCertificate';
+import { TemplateCertificate } from './pages/TemplateCertificate';
 import { CompleteCertificate } from './components/certificate/CompleteCertificate';
 import { generateCertificatePDF } from './utils/pdfGenerator';
 import { printCertificate } from './utils/printCertificate';
 import { usePwaInstall } from './hooks/usePwaInstall';
-import { Smartphone, Monitor, CheckCircle, Info, Loader2, LogOut, Download, Sliders } from 'lucide-react';
+import { Smartphone, Monitor, CheckCircle, Info, Loader2, LogOut, Download, Sliders, Printer } from 'lucide-react';
 import { StoreSettingsModal } from './components/common/StoreSettingsModal';
 import { SidebarBottomSheet } from './components/common/SidebarBottomSheet';
 
@@ -120,7 +121,7 @@ export default function App() {
     }
   };
 
-  // Robust universal print handler (A4 sheet with A5 top-half)
+  // Robust universal print handler (true A5 landscape sheet)
   const handlePrintCertificate = async (cert: Certificate) => {
     flushSync(() => setPdfTargetCert(cert));
     showToast('Preparing Print', `Formatting certificate #${cert.serialNo || '0100'} for printing...`, 'info');
@@ -136,6 +137,10 @@ export default function App() {
   // Navigation handlers
   const handleNavigateHistory = () => {
     setCurrentScreen('previous');
+  };
+
+  const handleNavigateTemplate = () => {
+    setCurrentScreen('template');
   };
 
   const handleNavigateCreate = () => {
@@ -181,8 +186,8 @@ export default function App() {
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '1200px',
-          height: '800px',
+          width: '1024px',
+          height: '665px',
           pointerEvents: 'none',
           zIndex: -9999,
           opacity: 0,
@@ -201,7 +206,7 @@ export default function App() {
       <aside className="hidden md:flex items-center justify-between w-full max-w-2xl px-4 py-2 mb-3 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200 shadow-xs text-xs">
         <div className="flex items-center space-x-2 text-slate-700 font-semibold">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-serif font-bold text-brand-900">SURAJ BULLION ACCESSORIES</span>
+          <span className="font-serif font-bold text-brand-900">SURAJ BULLION ASSAYERS</span>
           <span className="text-slate-400">|</span>
           <span className="text-slate-500 font-normal">Mobile-First UI</span>
         </div>
@@ -247,6 +252,17 @@ export default function App() {
               <span>Install App</span>
             </button>
           )}
+
+          {/* Blank Printing Template Button */}
+          <button
+            type="button"
+            onClick={handleNavigateTemplate}
+            className="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-300 hover:border-amber-500 text-slate-800 font-semibold text-xs rounded-lg flex items-center space-x-1.5 shadow-2xs transition-all active:scale-95 cursor-pointer"
+            title="View and download blank certificate template for printing"
+          >
+            <Printer className="w-3.5 h-3.5 text-amber-700" />
+            <span>Template</span>
+          </button>
 
           {/* Laptop-Only Button: Edit Certificate Static Content & Store Details */}
           <button
@@ -341,6 +357,14 @@ export default function App() {
               onPrint={handlePrintCertificate}
             />
           )}
+
+          {currentScreen === 'template' && (
+            <TemplateCertificate
+              onBack={() => setCurrentScreen('create')}
+              onOpenMenu={() => setIsSidebarMenuOpen(true)}
+              showToast={showToast}
+            />
+          )}
         </div>
 
         {/* Simulated Home Indicator Bar */}
@@ -358,6 +382,10 @@ export default function App() {
         onNavigatePrevious={() => {
           setIsSidebarMenuOpen(false);
           handleNavigateHistory();
+        }}
+        onNavigateTemplate={() => {
+          setIsSidebarMenuOpen(false);
+          handleNavigateTemplate();
         }}
         onLogout={() => {
           setIsSidebarMenuOpen(false);
@@ -402,8 +430,6 @@ export default function App() {
   );
 }
  
-
-
 
 
 

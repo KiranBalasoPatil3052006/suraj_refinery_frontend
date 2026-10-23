@@ -17,4 +17,4 @@ export interface Certificate {
 
 export type FilterCategory = 'all' | 'name' | 'serialNo' | 'purity';
 
-export type ScreenView = 'create' | 'previous' | 'details' | 'preview';
+export type ScreenView = 'create' | 'previous' | 'details' | 'preview' | 'template';

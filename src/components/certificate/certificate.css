@@ -1,34 +1,23 @@
-/* ==========================================================================
-   Silver Sample Certificate — Exact Reference Stylesheet
-   Ported 1:1 from certificate/certificate.css for 100% pixel fidelity
-   across UI, PDF, and Print outputs.
-   ========================================================================== */
+/* ============================================================
+   SURAJ BULLION ASSAYERS — Silver Sample Certificate
+   Pixel-accurate stylesheet calibrated to reference artifact
+   ============================================================ */
 
 :root {
-  --sba-navy:        #0B3C55;
-  --sba-navy-deep:   #082B3D;
-  --sba-gold:        #C9A227;
-  --sba-gold-soft:   #D9BE72;
-  --sba-bg-soft:     #EEF6F9;
-  --sba-border-soft: #C7DEE7;
-  --sba-text-muted:  #4C6B7A;
-  --sba-line:        #4A87A3;
-
-  --cert-w: 1200px;
-  --cert-h: 800px;
+  --certificate-width: 1024px;
+  --certificate-height: 665px;
+  --certificate-ink: #23075b;
 }
 
-/* ----------------------------------------------------------------------
-   1. Responsive viewport that scales the FIXED certificate without ever
-      distorting its aspect ratio or letting content overflow.
-   ---------------------------------------------------------------------- */
+/* ---------- Viewport & Scaling ---------- */
+
 .certificate-viewport {
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  padding: 12px 0;
+  padding: 8px 0;
   background: transparent;
+  -webkit-overflow-scrolling: touch;
 }
 
 .certificate-scaler {
@@ -36,18 +25,20 @@
   margin: 0 auto;
 }
 
+/* ---------- Certificate Canvas ---------- */
+
 .certificate {
-  width: var(--cert-w);
-  height: var(--cert-h);
-  flex-shrink: 0;
   position: relative;
+  width: var(--certificate-width);
+  height: var(--certificate-height);
+  flex-shrink: 0;
+  overflow: hidden;
+  box-sizing: border-box;
   background: #ffffff;
-  /* Tailwind preflight sets 1.5 globally. The reference certificate uses
-     the browser's normal line-height, so reset the print canvas here. */
+  color: var(--certificate-ink);
+  font-family: 'Times New Roman', Georgia, serif;
   line-height: normal;
   transform-origin: top left;
-  touch-action: pan-x pan-y pinch-zoom;
-  box-sizing: border-box;
   user-select: none;
 }
 
@@ -57,10 +48,9 @@
   box-sizing: border-box;
 }
 
-/* ----------------------------------------------------------------------
-   2. Certificate frame / background
-   ---------------------------------------------------------------------- */
-.cert-bg-img {
+/* ---------- Double Border Background ---------- */
+
+.cert-bg-border {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -70,494 +60,400 @@
   z-index: 0;
 }
 
-/* ----------------------------------------------------------------------
-   3. Content area
-   ---------------------------------------------------------------------- */
-.cert-content {
+/* ---------- Top Registration Number ---------- */
+
+.cert-registration {
   position: absolute;
-  inset: 44px 56px;
-  display: flex;
-  flex-direction: column;
-  z-index: 1;
+  top: 48px;
+  left: 56px;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 25px;
+  font-weight: 900;
+  color: var(--certificate-ink);
+  white-space: nowrap;
+  z-index: 2;
 }
 
-/* -- header: contact block (left) + title (center) + spacer (right) ---- */
-.cert-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
+/* ---------- Top Phone with Mobile Icon ---------- */
 
-.cert-contact {
-  width: 260px;
-  flex-shrink: 0;
+.cert-phone {
+  position: absolute;
+  top: 48px;
+  right: 62px;
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-top: 86px;
-}
-
-.contact-row {
-  display: flex;
-  gap: 10px;
-  font-family: 'Inter', sans-serif;
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--sba-navy);
-}
-
-.contact-row.contact-phone {
   align-items: center;
+  gap: 8px;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 25px;
+  font-weight: 900;
+  color: var(--certificate-ink);
+  white-space: nowrap;
+  z-index: 2;
 }
 
-.contact-row.contact-phone svg {
-  width: 19px;
-  height: 19px;
-  flex-shrink: 0;
-  margin-top: 0;
-  color: var(--sba-navy);
+.cert-phone-icon {
+  width: 26px;
+  height: 27px;
+  object-fit: contain;
+  display: block;
 }
 
-.contact-row.contact-phone span {
-  line-height: 1.2;
+/* ---------- Shivan Seal Logo ---------- */
+
+.cert-logo {
+  position: absolute;
+  top: 86px;
+  left: 58px;
+  width: 152px;
+  height: 152px;
+  object-fit: contain;
+  z-index: 2;
 }
 
-.contact-row.contact-address {
-  align-items: flex-start;
-}
+/* ---------- Company Title — Exact Alignment & Fit matching Reference ---------- */
 
-.contact-row.contact-address svg {
-  width: 19px;
-  height: 19px;
-  flex-shrink: 0;
-  margin-top: 3px;
-  color: var(--sba-navy);
-}
-
-.contact-row.contact-address span {
-  line-height: 1.35;
-}
-
-.cert-header-spacer {
-  width: 260px;
-  flex-shrink: 0;
-}
-
-.cert-title-block {
-  flex: 1;
+.cert-company-name {
+  position: absolute;
+  top: 95px;
+  left: 210px;
+  width: 744px;
+  max-width: 744px;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 54px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.012em;
+  color: var(--certificate-ink);
+  text-transform: uppercase;
+  white-space: nowrap;
   text-align: center;
-  padding: 0 12px;
+  -webkit-text-stroke: 1.40px var(--certificate-ink);
+  text-shadow: 0 0 0.5px var(--certificate-ink);
+  transform: scaleY(1.14);
+  transform-origin: center top;
+  box-sizing: border-box;
+  overflow: visible;
+  z-index: 2;
 }
 
-.cert-tamil-title {
-  font-family: 'Noto Serif Tamil', serif;
-  font-weight: 600;
-  font-size: 28px;
-  line-height: 1.2;
-  color: var(--sba-navy);
-  margin: 0 0 3px;
+/* ---------- Address — Bold Sans-Serif with Exact Spacing matching Reference ---------- */
+
+.cert-address,
+.cert-address .certificate-number {
+  position: absolute;
+  top: 160px;
+  left: 210px;
+  width: 744px;
+  max-width: 744px;
+  font-family: Arial, Helvetica, 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1.15;
+  color: var(--certificate-ink);
   white-space: nowrap;
+  text-align: center;
+  -webkit-text-stroke: 0.5px var(--certificate-ink);
+  letter-spacing: 0.02em;
+  box-sizing: border-box;
+  z-index: 2;
 }
 
-.cert-english-title {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 26px;
-  letter-spacing: 0.03em;
-  color: var(--sba-navy);
-  margin: 0 0 18px;
-  white-space: nowrap;
-}
+/* ---------- Subtitle Banner (SILVER SAMPLE CERTIFICATE) — Exact Vertical Gap ---------- */
 
 .cert-subtitle {
+  position: absolute;
+  top: 200px;
+  left: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: 0.28em;
-  color: var(--sba-navy);
-  white-space: nowrap;
-  line-height: 18px;
+  z-index: 2;
 }
 
-.cert-subtitle .cert-subtitle-line,
-.cert-subtitle svg.rule {
-  width: 46px;
-  height: 18px;
-  flex-shrink: 0;
-  display: block;
-}
-
-.cert-subtitle .cert-subtitle-text {
-  line-height: 18px;
-  display: inline-block;
-}
-
-.cert-subtitle .rule:not(svg) {
-  width: 46px;
-  height: 1.5px;
-  background: var(--sba-gold);
-  display: inline-block;
-  vertical-align: middle;
-}
-
-/* -- centered seal -------------------------------------------------------- */
-.cert-seal-row {
-  display: flex;
-  justify-content: center;
-  margin-top: -34px;
-}
-
-.cert-seal {
-  width: 138px;
-  flex-shrink: 0;
-}
-
-.cert-seal img {
-  width: 100%;
-  height: auto;
-  display: block;
+.cert-subtitle-image {
+  height: 46px;
+  width: auto;
+  max-width: 620px;
   object-fit: contain;
+  display: block;
 }
 
-/* -- two-column body split by a vertical rule ----------------------------- */
-.cert-body-columns {
-  flex: 1;
+/* ---------- Field Rows & Underlines ---------- */
+
+.cert-field-row {
   display: flex;
-  margin-top: 10px;
-  min-height: 0;
-}
-
-.cert-col {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.cert-col-left {
-  padding-right: 46px;
-}
-
-.cert-col-right {
-  padding-left: 46px;
-  border-left: 1.5px solid var(--sba-line);
-}
-
-.field-row {
-  display: grid;
-  grid-template-columns: 92px 14px 1fr;
-  /* Keep the label, colon, and entered text on one typographic baseline.
-     `start` aligns their boxes, which is visibly wrong when their fonts or
-     line-heights differ in the PDF/print renderer. */
   align-items: baseline;
-  column-gap: 4px;
-  font-family: 'Playfair Display', serif;
-}
-
-.field-row + .field-row {
-  margin-top: 22px;
+  position: relative;
+  z-index: 2;
 }
 
 .field-label {
-  font-size: 19px;
-  font-weight: 600;
-  color: var(--sba-navy);
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 25px;
+  font-weight: 700;
+  color: var(--certificate-ink);
   white-space: nowrap;
-  line-height: 1.3;
-}
-
-.field-colon {
-  font-size: 19px;
-  font-weight: 600;
-  color: var(--sba-navy);
-  line-height: 1.3;
 }
 
 .field-value {
-  display: block;
-  font-family: 'Playfair Display', serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--sba-navy-deep);
-  border-bottom: 1.4px solid var(--sba-line);
-  padding-bottom: 7px;
-  min-height: 27px;
-  line-height: 1.3;
-  white-space: nowrap;
-  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  min-height: 28px;
+  border-bottom: 2px solid var(--certificate-ink);
+  margin-left: 6px;
+  font-family: 'Times New Roman', Georgia, serif !important;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--certificate-ink);
+  line-height: 1.2;
   text-overflow: ellipsis;
-}
-
-/* Tabular numbers for S.No and Date */
-.num-value {
-  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  font-weight: 700 !important;
-  font-size: 18px !important;
-  letter-spacing: 0.05em;
-  font-feature-settings: 'tnum' on, 'lnum' on;
-}
-
-/* -- Mark block: label row + line 2 row --------------------------------- */
-.mark-block {
-  display: flex;
-  flex-direction: column;
-  margin-top: 22px;
-}
-
-.mark-line2-row {
-  display: grid;
-  grid-template-columns: 92px 14px 1fr;
-  column-gap: 4px;
-  margin-top: 14px;
-}
-
-.mark-line2-value {
-  grid-column: 3;
-  display: block;
-  font-family: 'Playfair Display', serif;
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--sba-navy-deep);
-  border-bottom: 1.4px solid var(--sba-line);
-  padding-bottom: 7px;
-  min-height: 27px;
-  line-height: 1.3;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding-left: 4px;
 }
 
-/* -- Silver Sample image box (compact frame) ----------------------------- */
-.sample-box {
-  position: relative;
+/* M/s. Row */
+.ms-row {
+  position: absolute;
+  top: 280px;
+  left: 58px;
+  width: 424px;
+  height: 38px;
+}
+
+.ms-row .field-label {
+  width: 58px;
+}
+
+/* Mark Row 1 */
+.mark-row {
+  position: absolute;
+  top: 334px;
+  left: 58px;
+  width: 424px;
+  height: 38px;
+}
+
+.mark-row .field-label {
+  width: 64px;
+}
+
+/* Mark Row 2 (Second Underline) */
+.mark-line-2-row {
+  position: absolute;
+  top: 388px;
+  left: 58px;
+  width: 424px;
+  height: 38px;
+}
+
+.mark-line-2 {
+  margin-left: 0;
   width: 100%;
-  max-width: 340px;
-  height: 195px;
-  flex: 0 0 195px;
-  margin: 18px auto 0;
-  align-self: center;
-  background: #F4F7F8;
-  border: 1.5px solid var(--sba-border-soft);
-  border-radius: 8px;
+}
+
+/* Sample Photo Box — positioned under Mark lines on left */
+.sample-box {
+  position: absolute;
+  top: 430px;
+  left: 58px;
+  width: 424px;
+  height: 168px;
+  border: 1.5px solid var(--certificate-ink);
+  border-radius: 6px;
   overflow: hidden;
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
-  isolation: isolate;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.sample-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: #9CB0B9;
-  font-family: 'Inter', sans-serif;
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.sample-placeholder svg {
-  width: 44px;
-  height: 44px;
+  z-index: 2;
 }
 
 .sample-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
   object-position: center;
   display: block;
-  border-radius: 6.5px;
 }
 
-/* -- right column: S.No / Date, Fineness, Proprietor --------------------- */
-.cert-spacer {
-  flex: 0;
-  height: 34px;
+/* S.No. Row — Precisely positioned at x = 698px */
+.sno-row {
+  position: absolute;
+  top: 280px;
+  left: 698px;
+  width: 264px;
+  height: 38px;
 }
 
-.side-label {
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-  font-size: 19px;
-  color: var(--sba-navy);
-  margin-bottom: 10px;
-  margin-top: 38px;
+.sno-row .field-label {
+  width: 66px;
+}
+
+/* Date Row — Precisely positioned at x = 698px directly beneath S.No. */
+.date-row {
+  position: absolute;
+  top: 334px;
+  left: 698px;
+  width: 264px;
+  height: 38px;
+}
+
+.date-row .field-label {
+  width: 66px;
+}
+
+/* Unified serif font for all numeric fields & values */
+.num-value,
+.certificate-number {
+  font-family: 'Times New Roman', Georgia, serif !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700 !important;
+}
+
+/* ---------- Fineness Section ---------- */
+
+.fineness-section {
+  position: absolute;
+  top: 388px;
+  left: 576px;
+  width: 388px;
+  z-index: 2;
+}
+
+.fineness-label {
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--certificate-ink);
+  margin-bottom: 4px;
+  padding-left: 2px;
 }
 
 .fineness-box {
-  background: var(--sba-bg-soft);
-  border: 1.5px solid var(--sba-border-soft);
+  width: 388px;
+  height: 99px;
+  border: 2px solid var(--certificate-ink);
   border-radius: 10px;
-  padding: 16px 10px 18px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 4px;
+}
+
+/* Flower size: exactly 32px × 30px calibrated to reference */
+.fineness-flower-icon {
+  width: 32px;
+  height: 30px;
+  object-fit: contain;
+  display: block;
 }
 
 .fineness-value {
+  font-family: 'Times New Roman', Georgia, serif !important;
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--certificate-ink);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
-  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 700;
-  font-size: 48px;
-  color: var(--sba-navy-deep);
-  line-height: 1;
-  letter-spacing: -0.01em;
-  font-feature-settings: 'tnum' on, 'lnum' on;
-}
-
-.fineness-value > span:not(.diamond) {
-  display: block;
-  line-height: 1;
 }
 
 .fineness-value .diamond {
-  /* A geometric diamond avoids font-specific glyph baselines. Flex centers
-     this smaller icon against the 48px digit row in UI, PDF, and print. */
-  display: block;
-  width: 12px;
-  height: 12px;
-  flex: 0 0 12px;
-  margin: 0 17px;
-  background: var(--sba-gold);
-  color: transparent;
-  font-size: 0;
-  line-height: 0;
-  transform: rotate(45deg);
+  margin: 0 8px;
+  font-size: 16px;
 }
 
 .fineness-words {
-  margin-top: 16px;
-  text-align: center;
-  font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 15px;
   font-weight: 700;
-  font-size: 14px;
-  line-height: 1;
-  letter-spacing: 0.06em;
-  word-spacing: 24px;
-  color: var(--sba-navy);
+  letter-spacing: 0.05em;
+  word-spacing: 6px;
+  color: var(--certificate-ink);
+  text-transform: capitalize;
+  margin-top: 4px;
 }
 
-.proprietor-block {
-  width: 220px;
-  margin: auto 0 0 auto;
+/* ---------- For Company (aligned under left edge of Fineness box) ---------- */
+
+.for-company {
+  position: absolute;
+  top: 521px;
+  left: 584px;
+  width: 380px;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--certificate-ink);
+  text-align: left;
+  z-index: 2;
+}
+
+.for-company strong {
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/* ---------- Proprietor Label (under signature area on right) ---------- */
+
+.proprietor-label {
+  position: absolute;
+  top: 590px;
+  left: 744px;
+  width: 95px;
   text-align: center;
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--certificate-ink);
+  z-index: 2;
 }
 
-.proprietor-block .signature-space {
-  height: 55px;
-}
+/* ---------- Values-Only Mode (Stationery Print) ---------- */
 
-.proprietor-block .signature-line {
-  height: 0;
-  border-top: 1.4px solid var(--sba-navy);
-  margin-bottom: 8px;
-}
-
-.proprietor-block .signature-label {
-  font-family: 'Playfair Display', serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--sba-navy);
-}
-
-/* ==========================================================================
-   Values-Only Print Mode (Physical Pre-Printed Stationery Mode)
-   Suppresses all static pre-printed elements while preserving 100% exact
-   layout geometry, box dimensions, grid alignments, and baselines (Zero Shift).
-   ========================================================================== */
-.certificate.print-values-only {
-  background: #ffffff !important;
-}
-
-/* 1. Hide decorative background artwork & borders */
-.certificate.print-values-only .cert-bg-img {
-  visibility: hidden !important;
-}
-
-/* 2. Hide store header (contact, titles, subtitle, rules) while keeping exact height */
-.certificate.print-values-only .cert-header {
-  visibility: hidden !important;
-}
-
-/* 3. Hide circular seal */
-.certificate.print-values-only .cert-seal-row {
-  visibility: hidden !important;
-}
-
-/* 4. Hide vertical dividing rule between columns */
-.certificate.print-values-only .cert-col-right {
-  border-left-color: transparent !important;
-}
-
-/* 5. Hide field labels and colons (preserves grid column 1 & 2 spacing: 92px / 14px) */
+.certificate.print-values-only .cert-bg-border,
+.certificate.print-values-only .cert-registration,
+.certificate.print-values-only .cert-phone,
+.certificate.print-values-only .cert-logo,
+.certificate.print-values-only .cert-company-name,
+.certificate.print-values-only .cert-address,
+.certificate.print-values-only .cert-subtitle,
 .certificate.print-values-only .field-label,
-.certificate.print-values-only .field-colon {
+.certificate.print-values-only .fineness-label,
+.certificate.print-values-only .fineness-flower-icon,
+.certificate.print-values-only .for-company,
+.certificate.print-values-only .proprietor-label {
   visibility: hidden !important;
 }
 
-/* 6. Hide underlines under dynamic field values (already pre-printed on stationery) */
 .certificate.print-values-only .field-value,
-.certificate.print-values-only .mark-line2-value {
-  border-bottom-color: transparent !important;
-}
-
-/* 7. Hide sample box border and background; hide camera placeholder */
+.certificate.print-values-only .fineness-box,
 .certificate.print-values-only .sample-box {
-  background: transparent !important;
   border-color: transparent !important;
 }
 
-.certificate.print-values-only .sample-placeholder {
-  visibility: hidden !important;
-}
+/* ---------- Print Media Sheet ---------- */
 
-/* 8. Hide fineness label, container border & background, and diamond separator */
-.certificate.print-values-only .side-label {
-  visibility: hidden !important;
-}
-
-.certificate.print-values-only .fineness-box {
-  background: transparent !important;
-  border-color: transparent !important;
-}
-
-.certificate.print-values-only .diamond {
-  visibility: hidden !important;
-}
-
-/* 9. Hide signature line and PROPRIETOR text */
-.certificate.print-values-only .proprietor-block {
-  visibility: hidden !important;
-}
-
-/* ==========================================================================
-   Print — certificate prints horizontally on an A4 sheet,
-   sized as A5 (210mm x 148.5mm), covering exactly the top half of the sheet.
-   Exact match to the generated PDF format.
-   ========================================================================== */
 @media print {
   @page {
-    size: A4 portrait;
+    size: 210mm 148mm;
     margin: 0;
   }
 
-  html, body {
+  html,
+  body {
+    width: 210mm !important;
+    height: 148mm !important;
     margin: 0 !important;
     padding: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    background: #ffffff !important;
     overflow: hidden !important;
+    background: #ffffff !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }

@@ -1,7 +1,7 @@
 import html2canvas from 'html2canvas';
 
-export const CERTIFICATE_WIDTH = 1200;
-export const CERTIFICATE_HEIGHT = 800;
+export const CERTIFICATE_WIDTH = 1024;
+export const CERTIFICATE_HEIGHT = 665;
 export const CERTIFICATE_RENDER_SCALE = 3;
 
 const EXPORT_MIRROR_ID = 'sba-certificate-export-mirror';
@@ -13,6 +13,10 @@ async function waitForCertificateAssets(element: HTMLElement): Promise<void> {
         document.fonts.load('700 48px Outfit'),
         document.fonts.load('700 14px Outfit'),
         document.fonts.load('600 19px "Playfair Display"'),
+        document.fonts.load('900 90px "Roboto Slab"'),
+        document.fonts.load('700 29px "Roboto Slab"'),
+        document.fonts.load('400 29px "Roboto Condensed"'),
+        document.fonts.load('700 53px "Roboto Condensed"'),
       ]);
       await document.fonts.ready;
     } catch {
@@ -97,6 +101,8 @@ async function createExportMirror(certEl: HTMLElement): Promise<HTMLElement> {
   mirror.style.setProperty('transform-origin', 'top left', 'important');
   mirror.style.setProperty('margin', '0', 'important');
   mirror.style.setProperty('pointer-events', 'none', 'important');
+  mirror.style.setProperty('opacity', '1', 'important');
+  mirror.style.setProperty('visibility', 'visible', 'important');
 
   const mirrorImages = Array.from(mirror.querySelectorAll('img'));
   mirrorImages.forEach((image, index) => {
@@ -110,6 +116,12 @@ async function createExportMirror(certEl: HTMLElement): Promise<HTMLElement> {
 
   await Promise.all(
     mirrorImages.map(async (image) => {
+      if (!image.complete) {
+        await new Promise<void>((resolve) => {
+          image.onload = () => resolve();
+          image.onerror = () => resolve();
+        });
+      }
       if (typeof image.decode === 'function') {
         try {
           await image.decode();
@@ -121,14 +133,15 @@ async function createExportMirror(certEl: HTMLElement): Promise<HTMLElement> {
   );
 
   // Commit the mirror's asset and font layout before html2canvas serializes it.
-  await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  await new Promise<void>((resolve) =>
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+  );
   return mirror;
 }
 
 /**
  * Builds the PDF/print bitmap using the browser's native HTML layout engine.
- * Unlike html2canvas's CanvasRenderer, foreignObject rendering does not
- * recalculate font baselines, which prevents export-only downward text drift.
+ * Ensures all embedded graphics and camera photos render with pixel precision.
  */
 export async function renderCertificateCanvas(certEl: HTMLElement): Promise<string> {
   await waitForCertificateAssets(certEl);
@@ -136,20 +149,38 @@ export async function renderCertificateCanvas(certEl: HTMLElement): Promise<stri
   const mirror = await createExportMirror(certEl);
 
   try {
-    const canvas = await html2canvas(mirror, {
-      scale: CERTIFICATE_RENDER_SCALE,
-      useCORS: true,
-      allowTaint: false,
-      backgroundColor: '#ffffff',
-      logging: false,
-      foreignObjectRendering: true,
-      width: CERTIFICATE_WIDTH,
-      height: CERTIFICATE_HEIGHT,
-      windowWidth: CERTIFICATE_WIDTH,
-      windowHeight: CERTIFICATE_HEIGHT,
-      scrollX: 0,
-      scrollY: 0,
-    });
+    let canvas: HTMLCanvasElement;
+    try {
+      canvas = await html2canvas(mirror, {
+        scale: CERTIFICATE_RENDER_SCALE,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        foreignObjectRendering: true,
+        width: CERTIFICATE_WIDTH,
+        height: CERTIFICATE_HEIGHT,
+        windowWidth: CERTIFICATE_WIDTH,
+        windowHeight: CERTIFICATE_HEIGHT,
+        scrollX: 0,
+        scrollY: 0,
+      });
+    } catch {
+      canvas = await html2canvas(mirror, {
+        scale: CERTIFICATE_RENDER_SCALE,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        foreignObjectRendering: false,
+        width: CERTIFICATE_WIDTH,
+        height: CERTIFICATE_HEIGHT,
+        windowWidth: CERTIFICATE_WIDTH,
+        windowHeight: CERTIFICATE_HEIGHT,
+        scrollX: 0,
+        scrollY: 0,
+      });
+    }
 
     return canvas.toDataURL('image/jpeg', 0.98);
   } finally {

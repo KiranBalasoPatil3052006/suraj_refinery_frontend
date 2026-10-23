@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export interface StoreSettings {
+  regdNo: string;
   tamilTitle: string;
   englishTitle: string;
   subtitle: string;
@@ -21,33 +22,36 @@ export interface StoreSettings {
   englishTitleFontSize: number; // px: default 26
   subtitleFontSize: number; // px: default 15
   contactFontSize: number; // px: default 17
+  addressFontSize: number; // px: default 19
   fieldValuesFontSize: number; // px: default 18
 }
 
 export const DEFAULT_STORE_SETTINGS: StoreSettings = {
-  tamilTitle: 'சூராஜ் புல்லியன் அசெசரீஸ்',
-  englishTitle: 'SURAJ BULLION ACCESSORIES',
+  regdNo: '235/2003/490',
+  tamilTitle: 'சூராஜ் புல்லியன் அசெசரிஸ்',
+  englishTitle: 'SURAJ BULLION ASSAYERS',
   subtitle: 'SILVER SAMPLE CERTIFICATE',
-  phone: '+91 98765 43210',
-  addressLine1: 'WAT, Ranganai Road,',
-  addressLine2: 'Singanallur, Coimbatore - 2',
+  phone: '63698 85340',
+  addressLine1: '106, Bungalow Street, SHEVAPET,',
+  addressLine2: 'SALEM-636002.',
   tagline: 'A TRUSTED QUALITY IN SILVER',
   bottomSlogan: 'PURITY BUILDS TRUST',
-  proprietorLabel: 'PROPRIETOR',
-  nameLabel: 'Name',
+  proprietorLabel: 'Proprietor',
+  nameLabel: 'M/s',
   markLabel: 'Mark',
   serialNoLabel: 'S.No.',
   dateLabel: 'Date',
   finenessLabel: 'Fineness',
   overallFontScale: 100,
   tamilTitleFontSize: 28,
-  englishTitleFontSize: 26,
+  englishTitleFontSize: 32,
   subtitleFontSize: 15,
   contactFontSize: 17,
-  fieldValuesFontSize: 18,
+  addressFontSize: 19,
+  fieldValuesFontSize: 29,
 };
 
-const STORAGE_KEY = 'sba_store_static_settings_v1';
+const STORAGE_KEY = 'sba_store_static_settings_v7';
 
 interface StoreSettingsContextType {
   settings: StoreSettings;

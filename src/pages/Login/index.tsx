@@ -46,7 +46,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       <aside className="hidden md:flex items-center justify-between w-full max-w-2xl px-4 py-2 mb-3 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200 shadow-xs text-xs">
         <div className="flex items-center space-x-2 text-slate-700 font-semibold">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-serif font-bold text-brand-900">SURAJ BULLION ACCESSORIES</span>
+          <span className="font-serif font-bold text-brand-900">SURAJ BULLION ASSAYERS</span>
           <span className="text-slate-400">|</span>
           <span className="text-slate-500 font-normal">Assay Portal</span>
         </div>
@@ -183,7 +183,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         {/* Bottom Home Indicator & Copyright */}
         <div className="pb-3 text-center select-none shrink-0">
           <p className="text-[10.5px] text-slate-400 font-medium">
-            © {new Date().getFullYear()} Suraj Bullion Accessories • Coimbatore
+            © {new Date().getFullYear()} Suraj Bullion Assayers • Coimbatore
           </p>
           <div className="hidden sm:flex justify-center pb-1 pt-2 pointer-events-none">
             <div className="w-32 h-1 bg-slate-400 rounded-full" />

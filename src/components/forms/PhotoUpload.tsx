@@ -15,6 +15,68 @@ interface PhotoUploadProps {
 }
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const LANDSCAPE_WIDTH = 1280;
+const LANDSCAPE_HEIGHT = 720;
+
+function renderLandscapeFrame(
+  source: CanvasImageSource,
+  sourceWidth: number,
+  sourceHeight: number
+): HTMLCanvasElement {
+  const canvas = document.createElement('canvas');
+  canvas.width = LANDSCAPE_WIDTH;
+  canvas.height = LANDSCAPE_HEIGHT;
+
+  const targetRatio = LANDSCAPE_WIDTH / LANDSCAPE_HEIGHT;
+  const sourceRatio = sourceWidth / sourceHeight;
+  let sourceX = 0;
+  let sourceY = 0;
+  let cropWidth = sourceWidth;
+  let cropHeight = sourceHeight;
+
+  if (sourceRatio > targetRatio) {
+    cropWidth = sourceHeight * targetRatio;
+    sourceX = (sourceWidth - cropWidth) / 2;
+  } else {
+    cropHeight = sourceWidth / targetRatio;
+    sourceY = (sourceHeight - cropHeight) / 2;
+  }
+
+  canvas.getContext('2d')?.drawImage(
+    source,
+    sourceX,
+    sourceY,
+    cropWidth,
+    cropHeight,
+    0,
+    0,
+    LANDSCAPE_WIDTH,
+    LANDSCAPE_HEIGHT
+  );
+  return canvas;
+}
+
+function readAsLandscapeDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      try {
+        const canvas = renderLandscapeFrame(image, image.naturalWidth, image.naturalHeight);
+        resolve(canvas.toDataURL('image/jpeg', 0.92));
+      } catch (error) {
+        reject(error);
+      } finally {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('Image decode failed'));
+    };
+    image.src = objectUrl;
+  });
+}
 
 /**
  * Photo input with two intentionally separate flows:
@@ -125,7 +187,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => 
 
   useEffect(() => () => stopCamera(), [stopCamera]);
 
-  const handleFile = (file?: File) => {
+  const handleFile = async (file?: File) => {
     setUploadError(undefined);
     if (!file) return;
 
@@ -139,10 +201,11 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => 
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => onChange(reader.result as string);
-    reader.onerror = () => setUploadError('The photo could not be read. Please try again.');
-    reader.readAsDataURL(file);
+    try {
+      onChange(await readAsLandscapeDataUrl(file));
+    } catch {
+      setUploadError('The photo could not be read. Please try again.');
+    }
   };
 
   const handleCameraChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,24 +246,9 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => 
       return;
     }
 
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d')?.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) {
-          setCameraError('The photo could not be captured. Please try again.');
-          return;
-        }
-        const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
-        handleFile(file);
-        closeCamera();
-      },
-      'image/jpeg',
-      0.92
-    );
+    const canvas = renderLandscapeFrame(video, video.videoWidth, video.videoHeight);
+    onChange(canvas.toDataURL('image/jpeg', 0.92));
+    closeCamera();
   };
 
   const cameraDialog = isCameraOpen ? (
@@ -214,7 +262,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => 
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 text-white">
           <div>
             <h2 id="camera-dialog-title" className="text-sm font-semibold">Take a sample photo</h2>
-            <p className="mt-0.5 text-[11px] text-slate-400">Position the silver sample inside the frame</p>
+            <p className="mt-0.5 text-[11px] text-slate-400">Turn the phone sideways and keep the sample inside the frame</p>
           </div>
           <button
             type="button"
@@ -226,7 +274,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => 
           </button>
         </div>
 
-        <div className="relative aspect-[4/3] bg-slate-900">
+        <div className="relative aspect-video bg-slate-900">
           <video
             ref={videoRef}
             autoPlay
@@ -374,7 +422,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ value, onChange }) => 
             </div>
           ) : (
             <div className="relative flex w-full items-center space-x-3 rounded-xl border border-slate-200 bg-white p-2.5 shadow-xs">
-              <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+              <div className="relative h-16 w-28 flex-shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
                 <img src={value} alt="Sample item preview" className="h-full w-full object-cover" />
               </div>
 

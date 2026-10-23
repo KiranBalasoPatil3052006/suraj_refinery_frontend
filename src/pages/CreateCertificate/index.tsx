@@ -43,7 +43,7 @@ export const CreateCertificate: React.FC<CreateCertificateProps> = ({
   const [customerName, setCustomerName] = useState<string>(initialData?.customerName || '');
   const [namePrefix] = useState<string>(initialData?.namePrefix || 'Mrs.');
   const [markLines, setMarkLines] = useState<string[]>(
-    initialData?.markLines || ['', '']
+    initialData?.markLines || ['', '', '']
   );
   const [date, setDate] = useState<string>(initialData?.date || getTodayString());
   const [purity, setPurity] = useState<string>(initialData?.purity || '');

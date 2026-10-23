@@ -18,7 +18,7 @@ export const MarkInput: React.FC<MarkInputProps> = ({ lines, onChange }) => {
   };
 
   const removeLine = (index: number) => {
-    if (lines.length <= 2) return; // Keep at least 2 lines default
+    if (lines.length <= 3) return; // Keep at least 3 lines default
     const updated = lines.filter((_, i) => i !== index);
     onChange(updated);
   };
@@ -44,7 +44,7 @@ export const MarkInput: React.FC<MarkInputProps> = ({ lines, onChange }) => {
                 className="w-full pl-9 pr-8 py-2.5 bg-white text-slate-800 text-sm border border-slate-300 rounded-lg shadow-sm placeholder:text-slate-400 focus:outline-none focus:border-brand-700 focus:ring-2 focus:ring-brand-700/20 transition-all"
               />
 
-              {idx >= 2 && (
+              {idx >= 3 && (
                 <button
                   type="button"
                   onClick={() => removeLine(idx)}

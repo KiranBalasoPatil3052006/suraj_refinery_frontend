@@ -9,12 +9,14 @@ import { renderCertificateCanvas } from './certificateCanvas';
  * then restores it immediately after.
  */
 
-const A5_CERT_WIDTH_MM = 210;    // A5 size certificate width (printed horizontally on A4)
-const A5_CERT_HEIGHT_MM = 148.5; // A5 size certificate height (covers exactly half of A4)
+const A5_PAGE_WIDTH_MM = 210;
+const A5_PAGE_HEIGHT_MM = 148;
+const HORIZONTAL_MARGIN_MM = 3; // Reduced space after border on left & right (3mm margin)
 
 function findCertificateElement(elementId: string): HTMLElement | null {
   return (
     document.getElementById(elementId) ||
+    document.getElementById('template-certificate-canvas') ||
     document.getElementById('complete-certificate-canvas') ||
     document.getElementById('details-complete-certificate-canvas') ||
     document.getElementById('offscreen-certificate-canvas') ||
@@ -24,8 +26,8 @@ function findCertificateElement(elementId: string): HTMLElement | null {
 
 /**
  * High-resolution PDF generator for Silver Sample Certificates.
- * Generates an A4 portrait page with horizontal A5 certificate (210mm x 148.5mm)
- * occupying the top half of the A4 page.
+ * Generates a true A5 landscape PDF page (210mm x 148mm) with proper space
+ * after the certificate border so the complete form fits cleanly without clipping.
  */
 export async function generateCertificatePDF(
   elementId: string,
@@ -39,14 +41,20 @@ export async function generateCertificatePDF(
 
   const imgData = await renderCertificateCanvas(element);
 
-  // Generate A4 portrait sheet containing horizontal A5 certificate on top half
   const doc = new jsPDF({
-    orientation: 'portrait',
+    orientation: 'landscape',
     unit: 'mm',
-    format: 'a4',
+    format: 'a5',
+    compress: true,
   });
 
-  doc.addImage(imgData, 'JPEG', 0, 0, A5_CERT_WIDTH_MM, A5_CERT_HEIGHT_MM, undefined, 'FAST');
+  // Calculate dimensions with proper margins (space after border)
+  const certWidthMm = A5_PAGE_WIDTH_MM - (HORIZONTAL_MARGIN_MM * 2); // 198mm
+  const certHeightMm = (665 / 1024) * certWidthMm; // ~128.58mm
+  const xOffsetMm = HORIZONTAL_MARGIN_MM; // 6mm space on left
+  const yOffsetMm = (A5_PAGE_HEIGHT_MM - certHeightMm) / 2; // ~9.71mm space on top/bottom
+
+  doc.addImage(imgData, 'JPEG', xOffsetMm, yOffsetMm, certWidthMm, certHeightMm, undefined, 'FAST');
 
   // Trigger universal download via Blob URL
   const blob = doc.output('blob');

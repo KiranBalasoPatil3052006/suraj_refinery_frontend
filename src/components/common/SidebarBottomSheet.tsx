@@ -1,11 +1,12 @@
 import React from 'react';
-import { FileText, LogOut, X, ChevronRight, Sliders } from 'lucide-react';
+import { FileText, LogOut, X, ChevronRight, Sliders, Printer } from 'lucide-react';
 import { AppMenuIcon } from './AppMenuIcon';
 
 interface SidebarBottomSheetProps {
   isOpen: boolean;
   onClose: () => void;
   onNavigatePrevious?: () => void;
+  onNavigateTemplate?: () => void;
   onLogout?: () => void;
   onOpenStoreSettings?: () => void;
   historyCount?: number;
@@ -16,6 +17,7 @@ export const SidebarBottomSheet: React.FC<SidebarBottomSheetProps> = ({
   isOpen,
   onClose,
   onNavigatePrevious,
+  onNavigateTemplate,
   onLogout,
   onOpenStoreSettings,
   historyCount = 0,
@@ -47,7 +49,7 @@ export const SidebarBottomSheet: React.FC<SidebarBottomSheetProps> = ({
             </div>
             <div>
               <h4 className="text-xs font-bold text-slate-800">Quick Navigation</h4>
-              <p className="text-[10px] text-slate-400">SURAJ BULLION ACCESSORIES</p>
+              <p className="text-[10px] text-slate-400">SURAJ BULLION ASSAYERS</p>
             </div>
           </div>
           <button
@@ -94,6 +96,34 @@ export const SidebarBottomSheet: React.FC<SidebarBottomSheetProps> = ({
                 )}
                 <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-brand-800" />
               </div>
+            </button>
+          )}
+
+          {/* Option: Certificate Template for Printing */}
+          {onNavigateTemplate && (
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onNavigateTemplate();
+              }}
+              className="w-full p-3 bg-slate-50 hover:bg-amber-50/70 border border-slate-200/70 hover:border-amber-200 rounded-2xl flex items-center justify-between transition-all active:scale-[0.99] cursor-pointer group text-left"
+            >
+              <div className="flex items-center space-x-3">
+                <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-amber-700 shadow-2xs group-hover:border-amber-300">
+                  <Printer className="w-4 h-4 text-amber-700" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-slate-800 group-hover:text-amber-900">
+                    Certificate Template
+                  </div>
+                  <div className="text-[10.5px] text-slate-500">
+                    Download or print blank template without S.No & image
+                  </div>
+                </div>
+              </div>
+
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-amber-700" />
             </button>
           )}
 
