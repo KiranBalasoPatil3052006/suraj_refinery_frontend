@@ -123,6 +123,8 @@ export const CreateCertificate: React.FC<CreateCertificateProps> = ({
         date: date || getTodayString(),
         fineness: purity,
         printType,
+        photoFit,
+        samplePhotoUrl: samplePhotoUrl || '',
       });
 
       // Guarantee samplePhotoUrl is always set on newCert for preview, PDF export & print

@@ -16,6 +16,8 @@ interface CreateCertificateInput {
   date: string;
   fineness: string;
   printType?: 'complete' | 'values';
+  photoFit?: 'cover' | 'contain';
+  samplePhotoUrl?: string;
 }
 
 interface BackendCertificate {
@@ -73,8 +75,20 @@ interface ImageUrlResult {
 // ========================
 
 function transformCertificate(backend: BackendCertificate): Certificate {
+  const certId = backend._id || backend.id || '';
+  let samplePhotoUrl = (backend as any).samplePhotoUrl;
+
+  // If backend provided sampleImage or a local path, ensure samplePhotoUrl is set
+  if (!samplePhotoUrl) {
+    if ((backend as any).sampleImage?.url) {
+      samplePhotoUrl = (backend as any).sampleImage.url;
+    } else if (backend.sampleImage?.storagePath || (backend as any).sampleImage?.localPath || backend.sampleImage) {
+      samplePhotoUrl = `/api/v1/certificates/${certId}/image`;
+    }
+  }
+
   return {
-    id: backend._id || backend.id || '',
+    id: certId,
     serialNo: backend.serialNumber,
     customerName: backend.customerName,
     namePrefix: backend.namePrefix,
@@ -87,7 +101,7 @@ function transformCertificate(backend: BackendCertificate): Certificate {
     purity: backend.fineness,
     purityWords: backend.finenessWords,
     printType: backend.printType,
-    samplePhotoUrl: (backend as any).samplePhotoUrl || undefined,
+    samplePhotoUrl: samplePhotoUrl || undefined,
     photoFit: (backend as any).photoFit || 'cover',
     createdAt: backend.createdAt,
   };

@@ -68,9 +68,32 @@ export const CertificateCard: React.FC<CertificateCardProps> = ({
           </div>
         </div>
 
-        {/* Miniature Certificate Thumbnail */}
+        {/* Sample Photo Thumbnail or Miniature Certificate */}
         <div className="flex-shrink-0 pl-1">
-          <CertificateThumbnail serialNo={certificate.serialNo} />
+          {certificate.samplePhotoUrl ? (
+            <div className="relative w-16 h-20 rounded-xl overflow-hidden border border-brand-850/25 shadow-xs bg-slate-100 flex items-center justify-center">
+              <img
+                src={certificate.samplePhotoUrl}
+                alt={`Sample for ${certificate.serialNo}`}
+                className={`w-full h-full ${certificate.photoFit === 'contain' ? 'object-contain' : 'object-cover'}`}
+                loading="lazy"
+                crossOrigin="anonymous"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const fallback = e.currentTarget.parentElement?.querySelector('.card-fallback-thumb') as HTMLElement;
+                  if (fallback) fallback.style.display = 'flex';
+                }}
+              />
+              <div className="card-fallback-thumb hidden w-full h-full items-center justify-center">
+                <CertificateThumbnail serialNo={certificate.serialNo} />
+              </div>
+              <div className="absolute bottom-0 inset-x-0 bg-slate-900/70 backdrop-blur-2xs text-[8px] font-mono font-bold text-white text-center py-0.5 tracking-tight">
+                #{certificate.serialNo}
+              </div>
+            </div>
+          ) : (
+            <CertificateThumbnail serialNo={certificate.serialNo} />
+          )}
         </div>
       </div>
 

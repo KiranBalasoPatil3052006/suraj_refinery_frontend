@@ -158,30 +158,36 @@ export const CertificateDetails: React.FC<CertificateDetailsProps> = ({
           </div>
         </div>
 
-        {/* Sample Photo Section (if not in complete view) */}
-        {certificate.printType !== 'complete' && (
-          <div className="space-y-2">
+        {/* Sample Photo Section */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
             <span className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold block">
               Sample Photo Evidence
             </span>
-            {certificate.samplePhotoUrl ? (
-              <div className="w-full h-44 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 relative group">
-                <img
-                  src={certificate.samplePhotoUrl}
-                  alt="Silver Sample"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded">
-                  Captured Sample
-                </div>
-              </div>
-            ) : (
-              <div className="py-6 border-2 border-dashed border-slate-200 rounded-xl text-center text-xs text-slate-400">
-                No sample photo attached
-              </div>
+            {certificate.samplePhotoUrl && (
+              <span className="text-[10px] font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
+                Fit: {certificate.photoFit === 'contain' ? 'Fit Inside' : 'Fill Box'}
+              </span>
             )}
           </div>
-        )}
+          {certificate.samplePhotoUrl ? (
+            <div className="w-full h-48 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 relative group flex items-center justify-center">
+              <img
+                src={certificate.samplePhotoUrl}
+                alt="Silver Sample"
+                className={`w-full h-full ${certificate.photoFit === 'contain' ? 'object-contain' : 'object-cover'}`}
+                crossOrigin="anonymous"
+              />
+              <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[10px] px-2 py-0.5 rounded font-medium">
+                Captured Sample Photo
+              </div>
+            </div>
+          ) : (
+            <div className="py-6 border-2 border-dashed border-slate-200 rounded-xl text-center text-xs text-slate-400">
+              No sample photo attached
+            </div>
+          )}
+        </div>
 
         {/* Print Configuration Details */}
         <div className="flex items-center justify-between pt-2 pb-5 text-xs border-t border-slate-100">
